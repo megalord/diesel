@@ -23,8 +23,8 @@
             parts = route.split('/').slice(1),
             prefix = '';
 
-        // handle exception for the index route, which is passed as single slash
-        if(route === '/' && 'index' in routes) routes['index']();
+        // provide a general hook for all routes
+        if('*' in routes) routes['*'](route);
 
         // sequentially build the full route from its parts,
         // checking for sub-route callbacks at each step
@@ -76,6 +76,10 @@
         // remove everything up to and including the first '/' character
         route = route.slice(route.indexOf('/'));
 
+        // a fix for the index page when the url hash is used but not set
+        if(route === '')
+            route = '/';
+
         // parse the route
         parse(route);
     };
@@ -101,7 +105,8 @@
     // startup function for the router
     router.start = function() {
         // ensure that the history api is available if it is used
-        if(settings.history && !('history' in window)) settings.history = false;
+        if(settings.history && !('history' in window))
+            settings.history = false;
 
         // attach the handler to the change event
         // and call it to get the resources for the initial route
