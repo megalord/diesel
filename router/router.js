@@ -19,12 +19,12 @@
         var base = '',
             matchingRoutes = Object.keys(routes),
             params = {},
-            partial = '',
-            parts = route.split('/'),
+            partial = '/',
+            parts = route.split('/').slice(1),
             prefix = '';
 
-        // handle exception for the index route, which is passed as empty string
-        if(route === '' && 'index' in routes) routes['index']();
+        // handle exception for the index route, which is passed as single slash
+        if(route === '/' && 'index' in routes) routes['index']();
 
         // sequentially build the full route from its parts,
         // checking for sub-route callbacks at each step
@@ -74,7 +74,7 @@
         var route = location[settings.history ? 'pathname' : 'hash'];
 
         // remove everything up to and including the first '/' character
-        route = route.slice(route.indexOf('/') + 1);
+        route = route.slice(route.indexOf('/'));
 
         // parse the route
         parse(route);
@@ -112,6 +112,7 @@
     // assign a callback function to a route
     router.when = function(route, callback) {
         routes[route] = callback;
+        return this;
     };
 
     // finally, attach the router object to the namespace
