@@ -1,0 +1,54 @@
+<!doctype html>
+<head>
+    <meta charset="utf-8">
+</head>
+<body>
+    <header>
+        <h1>diesel testing</h1>
+    </header>
+    <main>
+        <section>
+            <h3>router</h3>
+            <a href="/">home</a>
+            <a href="/test">test</a>
+            <a href="/page/1">1</a>
+            <a href="/page/2">2</a>
+            <div id="routerOutput">Status printed here.</div>
+        </section>
+        <section>
+            <h3>Model</h3>
+            <input type="text" name="i1" value="">
+            <div id="o1"></div>
+        </section>
+    </main>
+    <script src="events.js"></script>
+    <script src="model.js"></script>
+    <script src="router.js"></script>
+    <script>
+        Array.prototype.forEach.call(document.getElementsByTagName('a'), function(link) {
+            link.addEventListener('click', function(event) {
+                event.preventDefault();
+                diesel.router.navigateTo(event.target.pathname);
+            });
+        });
+
+        diesel.router.config({history:false})
+        .when('*', function(route) {
+            routerOutput.textContent = 'route changed to '+route;
+        })
+        .when('/', function() {
+            routerOutput.textContent = 'index';
+        })
+        .when('/test', function() {
+            routerOutput.textContent = 'test';
+        })
+        .when('/page', function() {
+            routerOutput.textContent = 'page - index';
+        })
+        .when('/page/:id', function(params) {
+            routerOutput.textContent = 'page '+params.id;
+        })
+        .start();
+    </script>
+</body>
+</html>
