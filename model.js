@@ -7,7 +7,7 @@ parent.Model = {
     // Create a new object using the Model prototype.
     create:function() {
         var self = Object.create(this);
-        self.data = {};
+        self._data = {};
         parent.Events.extendTo(self);
         return self;
     },
@@ -36,21 +36,21 @@ parent.Model = {
                 });
             };
         };
-        this.data[property] = value;
+        this._data[property] = value;
         // Return the model instance for chaining.
         return this;
     },
 
     // Retrieve a property of the model.
     get:function(property) {
-        return this.data[property];
+        return this._data[property];
     },
 
     // Change the value of a property of the model.
     // Trigger a change event that may propogate to other properties.
     set:function(property, value) {
-        if(property in this.data) {
-            this.data[property] = value;
+        if(property in this._data) {
+            this._data[property] = value;
             this.trigger('changed:' + property, value, property);
         };
     }

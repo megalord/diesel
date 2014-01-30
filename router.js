@@ -115,6 +115,8 @@ parent.router = {
 
     // Start monitoring history or hash changes.
     start:function() {
+        this._started = true;
+
         // Ensure that the history api is available if it is used.
         if(this._settings.history && !('history' in window))
             this._settings.history = false;
