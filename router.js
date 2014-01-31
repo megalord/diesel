@@ -62,8 +62,12 @@ parent.router = {
 
                     // Fix the partial route string.
                     partial = base + ':' + param;
-                    this._routes[partial](params);
-                    isValid = true;
+                    if(partial in this._routes) {
+                        this._routes[partial](params);
+                        isValid = true;
+                    } else {
+                        isValid = false;
+                    };
                 } else {
                     isValid = false;
                 };
