@@ -111,7 +111,7 @@ parent.router = {
 
         if(this._settings.history) {
             history.pushState(null, '', route);
-        //    this._routeChangeHandler();
+            this._routeChangeHandler();
         } else {
             location.hash = route;
         };
@@ -127,11 +127,14 @@ parent.router = {
 
         // Attach the handler to the change event
         // and call it to get the resources for the initial route.
-        window.onpopstate = this._routeChangeHandler;
+        window.onpopstate = function() {
+            diesel.router._routeChangeHandler;
+        };
         this._routeChangeHandler();
     },
 
     stop:function() {
+        this._started = false;
         window.onpopstate = function() {};
     },
 
