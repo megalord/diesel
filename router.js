@@ -128,7 +128,7 @@ parent.router = {
         // Attach the handler to the change event
         // and call it to get the resources for the initial route.
         window.onpopstate = function() {
-            diesel.router._routeChangeHandler;
+            diesel.router._routeChangeHandler();
         };
         this._routeChangeHandler();
     },
