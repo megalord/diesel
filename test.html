@@ -24,6 +24,7 @@
     <script src="events.js"></script>
     <script src="model.js"></script>
     <script src="router.js"></script>
+    <script src="mod.js"></script>
     <script>
         Array.prototype.forEach.call(document.getElementsByTagName('a'), function(link) {
             link.addEventListener('click', function(event) {
@@ -49,6 +50,18 @@
             routerOutput.textContent = 'page '+params.id;
         })
         .start();
+
+        var m = diesel.Model.create({
+            a:1,
+            b:function() {
+                return this.a * 2;
+            }
+        });
+        m.on('changed:a', function() { console.log('a changed'); });
+        m.on('changed:b', function() { console.log('b changed'); });
+        console.log(m.a, m.b);
+        m.a = 3;
+        console.log(m.a, m.b);
     </script>
 </body>
 </html>
