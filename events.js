@@ -12,6 +12,12 @@ parent.Events = {
     // Add a callback function to the registry for an event.
     // This function will be called when the event is fired.
     on:function(event, callback, context) {
+        if(Array.isArray(event)) {
+            for(var i = 0; i < event.length; i++)
+                this.on(event[i], callback, context);
+            return;
+        };
+
         if(!(event in this._registry))
             this._registry[event] = [];
         this._registry[event].push({
