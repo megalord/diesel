@@ -1,7 +1,7 @@
 let base;
 let routes = {};
 
-let notFoundFn = function (path) {
+let notFoundFn = function(path) {
   throw new Error(`No route matches ${path}`);
 }
 
