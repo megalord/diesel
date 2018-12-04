@@ -1,0 +1,17 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Diesel</title>
+  </head>
+  <body>
+    <main></main>
+    <script type="module">
+      import router from './router.js';
+      router({
+        '/': function() {
+          document.getElementsByTagName('main')[0].innerHTML = '<h1>Hello</h1>';
+        }
+      })
+    </script>
+  </body>
+</html>
