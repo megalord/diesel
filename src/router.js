@@ -75,7 +75,7 @@ function router(_routes) {
     }
 
     let href = event.target.getAttribute('href');
-    if (!href || href.includes('http')) {
+    if (!href || href.startsWith('http') || (href.startsWith('/') && base)) {
       return;
     }
 
@@ -91,8 +91,9 @@ function router(_routes) {
 // Programatically navigate to a route.
 router.go = function(route, options) {
   if (route.startsWith('/')) {
-    route = base + route;
+    route = route.slice(1);
   }
+  route = base + route;
 
   options || (options = {});
   history[options.replace ? 'replaceState' : 'pushState'](null, '', route);
