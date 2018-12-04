@@ -1,3 +1,4 @@
+let base;
 let routes = {};
 
 let notFoundFn = function (path) {
@@ -41,15 +42,28 @@ function parse(path) {
 function routeChangeHandler() {
   let path = location.pathname;
 
-  if (path === '') {
-    path = '/';
+  if (base) {
+    if (path.startsWith(base)) {
+      path = path.slice(base.length);
+    } else {
+      console.warn(`Path ${path} does not start with base ${base}`);
+    }
   }
+
+  path = '/' + path;
 
   parse(path)();
 }
 
 function router(_routes) {
   routes = _routes;
+  let baseEl = document.querySelector('base');
+  if (baseEl) {
+    base = baseEl.getAttribute('href');
+  }
+  if (!base) {
+    base = '/';
+  }
 
   if ('else' in routes) {
     notFoundFn = routes.else;
@@ -76,6 +90,10 @@ function router(_routes) {
 
 // Programatically navigate to a route.
 router.go = function(route, options) {
+  if (route.startsWith('/')) {
+    route = base + route;
+  }
+
   options || (options = {});
   history[options.replace ? 'replaceState' : 'pushState'](null, '', route);
 
