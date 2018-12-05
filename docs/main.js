@@ -124,4 +124,6 @@ router({
       ]),
     ])
   }
+}, {
+  history: false
 })

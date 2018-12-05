@@ -1,5 +1,5 @@
-let base;
 let routes = {};
+let settings = {};
 
 let notFoundFn = function(path) {
   throw new Error(`No route matches ${path}`);
@@ -40,14 +40,18 @@ function parse(path) {
 }
 
 function routeChangeHandler() {
-  let path = location.pathname;
-
-  if (base) {
-    if (path.startsWith(base)) {
-      path = path.slice(base.length);
-    } else {
-      console.warn(`Path ${path} does not start with base ${base}`);
+  let path;
+  if (settings.history) {
+    path = location.pathname;
+    if (settings.base) {
+      if (path.startsWith(settings.base)) {
+        path = path.slice(settings.base.length);
+      } else {
+        console.warn(`Path '${path}' does not start with base '${settings.base}'`);
+      }
     }
+  } else {
+    path = location.hash.slice(2); // starts with '#/'
   }
 
   path = '/' + path;
@@ -55,33 +59,43 @@ function routeChangeHandler() {
   parse(path)();
 }
 
-function router(_routes) {
+function router(_routes, _settings) {
   routes = _routes;
-  let baseEl = document.querySelector('base');
-  if (baseEl) {
-    base = baseEl.getAttribute('href');
-  }
-  if (!base) {
-    base = '/';
-  }
+  settings = _settings;
 
   if ('else' in routes) {
     notFoundFn = routes.else;
   }
 
-  document.addEventListener('click', function(event) {
-    if (event.target.tagName != 'A' || event.ctrlKey || event.metaKey || ('button' in event && event.button != 0)) {
-      return;
+  if (!settings.base) {
+    let baseEl = document.querySelector('base');
+    if (baseEl) {
+      settings.base = baseEl.getAttribute('href');
     }
+  }
+  if (!settings.base) {
+    settings.base = '/';
+  }
 
-    let href = event.target.getAttribute('href');
-    if (!href || href.startsWith('http') || (href.startsWith('/') && base)) {
-      return;
-    }
+  if (!('history' in settings)) {
+    settings.history = true;
+  }
 
-    event.preventDefault();
-    router.go(href);
-  });
+  if (settings.history) {
+    document.addEventListener('click', function(event) {
+      if (event.target.tagName != 'A' || event.ctrlKey || event.metaKey || ('button' in event && event.button != 0)) {
+        return;
+      }
+
+      let href = event.target.getAttribute('href');
+      if (!href || href.startsWith('http') || (href.startsWith('/') && settings.base)) {
+        return;
+      }
+
+      event.preventDefault();
+      router.go(href);
+    });
+  }
 
   window.onpopstate = routeChangeHandler;
   // Get the resources for the initial route.
@@ -90,12 +104,18 @@ function router(_routes) {
 
 // Programatically navigate to a route.
 router.go = function(route, options) {
+  options || (options = {});
+
+  if (!settings.history) {
+    location.hash = route;
+    return
+  }
+
   if (route.startsWith('/')) {
     route = route.slice(1);
   }
-  route = base + route;
+  route = settings.base + route;
 
-  options || (options = {});
   history[options.replace ? 'replaceState' : 'pushState'](null, '', route);
 
   // Adding a state entry does not trigger the `popstate` window event.
