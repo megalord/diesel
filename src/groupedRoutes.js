@@ -9,12 +9,9 @@ function recurse(prefix, routes, pres) {
       continue;
     }
 
-    let path = route === 'self' ? prefix : (prefix + route);
+    let path = prefix + route;
     if (routes[route].constructor === Function) {
-      //ret[path] = (params) => console.log(path, params, pres.concat([routes[route]]));
       ret[path] = (params) => pres.concat([routes[route]]).every((fn) => fn(params) !== false);
-    } else if (route === 'self') {
-      throw new TypeError(`groupedRoutes for self on ${path} must be a Function, got ${routes.constructor}`);
     } else if (routes[route].constructor === Object) {
       Object.assign(ret, recurse(path, routes[route], pres));
     } else {
