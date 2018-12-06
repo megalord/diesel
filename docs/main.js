@@ -21,7 +21,14 @@ function setContentCard(title, content) {
 
 router(groupedRoutes({
   '/': () => {
-    router.go('/intro/philosophy')
+    setContentCard('Diesel', [
+        el('p', [
+          String.raw`
+            This JavaScript code is just a set of common patterns I have arrived at from work on personal projects, which I tend to build from scratch for sake of my own learning.
+            It turns out that writing plain ol' JavaScript code can get you pretty far and teaches you a lot about why big frameworks make certain decisions.
+          `
+        ])
+    ])
   },
   '': {
     pre: () => {
