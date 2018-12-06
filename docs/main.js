@@ -116,6 +116,50 @@ router(groupedRoutes({
         el('p', 'will do for a smaller application.')
       ]);
     },
+    '/dom/elements': () => {
+      setContentCard('Elements', [
+        el('p', [
+          'If you want to render dynamic content, you\'re going to have to add (and remove) nodes from the DOM tree.'
+        ]),
+        el('p', [
+          el('pre', [
+            el('code', String.raw`
+              // el(tag, [attrs,] content)
+              let list = el('ul', { class: 'list' }, [
+                el('li', 'Item 1'),
+                el('li', 'Item 2')
+              ]);
+              document.querySelector('body').appendChild(list);
+            `)
+          ])
+        ]),
+        el('p', [
+          String.raw`
+            It's as simple as that really.  The `, el('code', 'el'), String.raw` method is basically just html in JavaScript syntax.
+            Perhaps that sounds silly or pointless, but it opens the door for easily adding logic, e.g.
+          `
+        ]),
+        el('p', [
+          el('pre', [
+            el('code', String.raw`
+              let items = ['Item 1', 'Item 2'];
+              let active = 0;
+              let list = el('ul', { class: 'list' },
+                items.map((item, i) => el('li', { class: i === active ? 'active' : '' }, item));
+              );
+              document.querySelector('body').appendChild(list);
+            `)
+          ])
+        ]),
+        el('p', [
+          String.raw`
+            If you follow current frontend frameworks, you may see a vague similarity to React (it's more obvious without JSX).
+            This idea not derived from React though, it is just one natural evolution from a need to render dynamic content, another popular outcome being augmented HTML as seen in Angular and Vue.
+            In fact, other libraries such as `, el('a', { href: 'https://github.com/hyperhype/hyperscript' }, 'hyperscript'), String.raw` have arrived at the same conclusion.
+          `
+        ])
+      ])
+    },
     '/router/base': () => {
       setContentCard('Router', [
         el('p', [
