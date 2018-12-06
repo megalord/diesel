@@ -1,5 +1,4 @@
-let routes = {};
-let settings = {};
+let routes, settings;
 
 let notFoundFn = function(path) {
   throw new Error(`No route matches ${path}`);
@@ -60,8 +59,8 @@ function routeChangeHandler() {
 }
 
 function router(_routes, _settings) {
-  routes = _routes;
-  settings = _settings;
+  routes = _routes || {};
+  settings = _settings || {};
 
   if ('else' in routes) {
     notFoundFn = routes.else;
